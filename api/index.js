@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3000;
 
@@ -10,6 +11,7 @@ const DB = {
 let dbo;
 
 app.use(cors());
+app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.json({ "hello": "express with mongo" });
@@ -33,9 +35,12 @@ app.get('/misdatos', function (req, res) {
 });
 
 app.post('/misdatos', function (req, res) {
-	let data = dbo.collection("micoleccion").insert({req}).toArray((err, result) => {
+	var task = req.body;
+	console.log('body is:', task);
+	let data = dbo.collection("micoleccion").insert(task).toArray((err, result) => {
 		if (err) throw err;
 		res.json(result);
+		
 	});
 });
 

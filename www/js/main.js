@@ -6,71 +6,74 @@ const list = document.querySelector('.list');
 
 
 fetch('http://localhost/api/misdatos')
-.then(res => res.json())
-.then(data => {
-    const taskArray = data[1].results;
-    return printList(taskArray);
-}
+    .then(res => res.json())
+    .then(data => {
+        const taskArray = data[1].results;
+        return printList(taskArray);
+    }
     )
 
 function printList(arr) {
     for (const item of arr) {
-        const newItem = document.createElement('li');
-        const task = document.createTextNode(item.task);
-        
-        const newCheckbox = document.createElement('input');
-        newCheckbox.type = 'checkbox';
-
+        createListElements(item.task);
         if (item.checked) {
             newCheckbox.checked;
         }
-    
-        const newDelBtn = document.createElement('button');
-        const btnText = document.createTextNode('delete');
-       
-        newDelBtn.appendChild(btnText);
-        newItem.appendChild(newCheckbox);
-        newItem.appendChild(task);   
-        newItem.appendChild(newDelBtn);
-        list.appendChild(newItem);
-         
-        newDelBtn.addEventListener('click', deleteTask);
-        newCheckbox.addEventListener('click', changeStatus);
     }
 }
 
-fetch('http://localhost/api/misdatos',
-{
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: "POST",
-    body: JSON.stringify({a: 1, b: 2})
-})
-.then(function(res){ console.log(res) })
-.catch(function(res){ console.log(res) })
-
-function createTask () {
-    
+function createListElements(input) {
     const newItem = document.createElement('li');
-    const task = document.createTextNode(input.value);
-    
+    const task = document.createTextNode(input);
+
+
     const newCheckbox = document.createElement('input');
     newCheckbox.type = 'checkbox';
 
     const newDelBtn = document.createElement('button');
     const btnText = document.createTextNode('delete');
-   
+
     newDelBtn.appendChild(btnText);
     newItem.appendChild(newCheckbox);
-    newItem.appendChild(task);   
+    newItem.appendChild(task);
     newItem.appendChild(newDelBtn);
     list.appendChild(newItem);
-     
+
     newDelBtn.addEventListener('click', deleteTask);
     newCheckbox.addEventListener('click', changeStatus);
+
+    return newCheckbox;
 }
+
+function createTask() {
+    const inputVal = input.value;
+    createListElements(inputVal);
+    postTask(inputVal);
+}
+
+function postTask(newTask) {
+// post body data 
+    const ENDPOINT = 'http://localhost/api/misdatos';
+    const listItem = {
+        task: newTask,
+        checked: false
+    };
+// request options
+    const options = {
+        method: 'POST',
+        body: JSON.stringify({tarea: 'hola que ase'}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+ // send POST request   
+    fetch(ENDPOINT, options)
+        .then(res => res.json())
+        .then(res => console.log(res));
+}
+
+
 
 function deleteTask(event) {
     const currentBtn = event.currentTarget;
@@ -93,7 +96,8 @@ function pressEnter(event) {
     if (event.key === 'Enter') {
         createTask();
     }
-} 
+}
 
-btn.addEventListener('click',createTask);
+btn.addEventListener('click', createTask);
 document.addEventListener('keyup', pressEnter);
+
