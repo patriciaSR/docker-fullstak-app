@@ -23,13 +23,24 @@ function createTask () {
     list.appendChild(newItem);
      
     newDelBtn.addEventListener('click', deleteTask);
-    // newCheckbox.addEventListener('click', changeStatus);
+    newCheckbox.addEventListener('click', changeStatus);
 }
 
 function deleteTask(event) {
     const currentBtn = event.currentTarget;
     const liItem = currentBtn.parentElement;
     liItem.remove();
+}
+
+function changeStatus(event) {
+    const currentBox = event.currentTarget;
+    const liItem = currentBox.parentElement;
+    if (currentBox.checked) {
+        liItem.classList.add('task-done');
+    }
+    else {
+        liItem.classList.remove('task-done');
+    }
 }
 
 btn.addEventListener('click',createTask);
