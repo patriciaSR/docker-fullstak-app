@@ -7,19 +7,49 @@ const list = document.querySelector('.list');
 
 fetch('http://localhost/api/misdatos')
 .then(res => res.json())
-.then(data => console.log(data[2].results))
+.then(data => {
+    const taskArray = data[1].results;
+    return printList(taskArray);
+}
+    )
 
-// fetch('/misdatos',
-// {
-//     headers: {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json'
-//     },
-//     method: "GET",
-//     // body: JSON.stringify({a: 1, b: 2})
-// })
-// .then(function(res){ console.log(res) })
-// .catch(function(res){ console.log(res) })
+function printList(arr) {
+    for (const item of arr) {
+        const newItem = document.createElement('li');
+        const task = document.createTextNode(item.task);
+        
+        const newCheckbox = document.createElement('input');
+        newCheckbox.type = 'checkbox';
+
+        if (item.checked) {
+            newCheckbox.checked;
+        }
+    
+        const newDelBtn = document.createElement('button');
+        const btnText = document.createTextNode('delete');
+       
+        newDelBtn.appendChild(btnText);
+        newItem.appendChild(newCheckbox);
+        newItem.appendChild(task);   
+        newItem.appendChild(newDelBtn);
+        list.appendChild(newItem);
+         
+        newDelBtn.addEventListener('click', deleteTask);
+        newCheckbox.addEventListener('click', changeStatus);
+    }
+}
+
+fetch('http://localhost/api/misdatos',
+{
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    method: "POST",
+    body: JSON.stringify({a: 1, b: 2})
+})
+.then(function(res){ console.log(res) })
+.catch(function(res){ console.log(res) })
 
 function createTask () {
     
