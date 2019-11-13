@@ -8,7 +8,7 @@ const list = document.querySelector('.list');
 fetch('http://localhost/api/misdatos')
     .then(res => res.json())
     .then(data => {
-        const taskArray = data[2].results;
+        const taskArray = data;
         return printList(taskArray);
     }
     )
@@ -103,8 +103,8 @@ function deleteTask(event) {
     const currentBtn = event.currentTarget;   
     const task =  currentBtn.previousSibling.textContent;
     const liItem = currentBtn.parentElement;
-    liItem.remove();
     deleteOnDatabase(task);
+    liItem.remove();
 }
 
 function changeStatus(event) {
