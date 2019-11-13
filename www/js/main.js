@@ -43,4 +43,11 @@ function changeStatus(event) {
     }
 }
 
+function pressEnter(event) {
+    if (event.key === 'Enter') {
+        createTask();
+    }
+} 
+
 btn.addEventListener('click',createTask);
+document.addEventListener('keyup', pressEnter);
