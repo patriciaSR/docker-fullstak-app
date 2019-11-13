@@ -15,3 +15,6 @@ https://stackoverflow.com/questions/45288147/post-an-object-with-fetch-using-rea
 
 hay que instalar: 
 npm install body-parse --save
+
+logs del contenedor del servidor app:
+docker-compose logs app

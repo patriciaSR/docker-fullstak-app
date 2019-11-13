@@ -15,15 +15,16 @@ fetch('http://localhost/api/misdatos')
 
 function printList(arr) {
     for (const item of arr) {
-        createListElements(item.task);
+        createListElements(item.task, item._id);
         if (item.checked) {
             newCheckbox.checked;
         }
     }
 }
 
-function createListElements(input) {
+function createListElements(input, id) {
     const newItem = document.createElement('li');
+    newItem.id = id;
     const task = document.createTextNode(input);
 
 
@@ -110,12 +111,38 @@ function deleteTask(event) {
 function changeStatus(event) {
     const currentBox = event.currentTarget;
     const liItem = currentBox.parentElement;
-    if (currentBox.checked) {
+    const itemId = liItem.id;
+    const status = currentBox.checked;
+    if (status) {
         liItem.classList.add('task-done');
     }
     else {
         liItem.classList.remove('task-done');
     }
+
+    updateOnDatabase(itemId, status);
+}
+
+function updateOnDatabase(id, bool) {
+    // post body data 
+    const ENDPOINT = 'http://localhost/api/misdatos';
+    const listItem = {
+        _id: id,
+        checked: bool
+    };
+// request options
+    const options = {
+        method: 'PATCH',
+        body: JSON.stringify(listItem),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+ // send POST request   
+    fetch(ENDPOINT, options)
+        .then(res => res.json())
+        .then(res => console.log(res));
 }
 
 function pressEnter(event) {

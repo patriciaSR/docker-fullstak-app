@@ -51,6 +51,16 @@ app.delete ('/misdatos', function (req, res) {
 	});
 });
 
+app.patch ('/misdatos', function (req, res) {
+	const id = req.body._id;
+	console.log(id);
+	var obj = req.body.checked;
+	let data = dbo.collection("micoleccion").updateOne({_id: id}, {$set: {checked: obj}}).toArray((err, result) => {
+		if (err) throw err;
+		res.json(result);
+	});
+});
+
 app.listen(PORT, function () {
 	console.log('Your node js server is running on PORT:', PORT);
 });
