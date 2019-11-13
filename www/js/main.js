@@ -8,7 +8,7 @@ const list = document.querySelector('.list');
 fetch('http://localhost/api/misdatos')
     .then(res => res.json())
     .then(data => {
-        const taskArray = data[1].results;
+        const taskArray = data[2].results;
         return printList(taskArray);
     }
     )
@@ -65,7 +65,7 @@ function postTask(newTask) {
 // request options
     const options = {
         method: 'POST',
-        body: JSON.stringify({tarea: 'hola que ase'}),
+        body: JSON.stringify(listItem),
         headers: {
             'Content-Type': 'application/json'
         }
@@ -78,7 +78,24 @@ function postTask(newTask) {
 }
 
 function deleteOnDatabase(newTask) {
-    console.log('eliminar en la base de datos');
+    // post body data 
+    const ENDPOINT = 'http://localhost/api/misdatos';
+    const listItem = {
+        task: newTask,
+    };
+// request options
+    const options = {
+        method: 'DELETE',
+        body: JSON.stringify(listItem),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+ // send POST request   
+    fetch(ENDPOINT, options)
+        .then(res => res.json())
+        .then(res => console.log(res));
 }
 
 
