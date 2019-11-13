@@ -5,6 +5,22 @@ const btn = document.querySelector('.create__btn');
 const list = document.querySelector('.list');
 
 
+fetch('http://localhost/api/misdatos')
+.then(res => res.json())
+.then(data => console.log(data[2].results))
+
+// fetch('/misdatos',
+// {
+//     headers: {
+//       'Accept': 'application/json',
+//       'Content-Type': 'application/json'
+//     },
+//     method: "GET",
+//     // body: JSON.stringify({a: 1, b: 2})
+// })
+// .then(function(res){ console.log(res) })
+// .catch(function(res){ console.log(res) })
+
 function createTask () {
     
     const newItem = document.createElement('li');
