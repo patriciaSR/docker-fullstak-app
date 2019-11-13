@@ -1,7 +1,5 @@
 # algunas pistas para empezar a saltar las piedras del camino:
 
-
-
 solución al error de CORS:
 https://expressjs.com/en/resources/middleware/cors.html
 

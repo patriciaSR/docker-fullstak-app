@@ -39,8 +39,15 @@ app.post('/misdatos', function (req, res) {
 	console.log('body is:', task);
 	let data = dbo.collection("micoleccion").insert(task).toArray((err, result) => {
 		if (err) throw err;
+		res.json(result);		
+	});
+});
+
+app.delete ('/misdatos', function (req, res) {
+	var task = req.body;
+	let data = dbo.collection("micoleccion").deleteOne(task).toArray((err, result) => {
+		if (err) throw err;
 		res.json(result);
-		
 	});
 });
 

@@ -30,12 +30,16 @@ function createListElements(input) {
     const newCheckbox = document.createElement('input');
     newCheckbox.type = 'checkbox';
 
+    const newText = document.createElement('p');
+    
+    
     const newDelBtn = document.createElement('button');
     const btnText = document.createTextNode('delete');
 
+    newText.appendChild(task);
     newDelBtn.appendChild(btnText);
     newItem.appendChild(newCheckbox);
-    newItem.appendChild(task);
+    newItem.appendChild(newText);
     newItem.appendChild(newDelBtn);
     list.appendChild(newItem);
 
@@ -73,12 +77,17 @@ function postTask(newTask) {
         .then(res => console.log(res));
 }
 
+function deleteOnDatabase(newTask) {
+    console.log('eliminar en la base de datos');
+}
 
 
 function deleteTask(event) {
-    const currentBtn = event.currentTarget;
-    const liItem = currentBtn.parentElement;
+    const currentBtn = event.currentTarget;   
+    const task =  currentBtn.previousSibling.textContent;
+    console.log(task);
     liItem.remove();
+    deleteOnDatabase();
 }
 
 function changeStatus(event) {
