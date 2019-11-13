@@ -85,9 +85,9 @@ function deleteOnDatabase(newTask) {
 function deleteTask(event) {
     const currentBtn = event.currentTarget;   
     const task =  currentBtn.previousSibling.textContent;
-    console.log(task);
+    const liItem = currentBtn.parentElement;
     liItem.remove();
-    deleteOnDatabase();
+    deleteOnDatabase(task);
 }
 
 function changeStatus(event) {
