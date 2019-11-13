@@ -15,17 +15,14 @@ fetch('http://localhost/api/misdatos')
 
 function printList(arr) {
     for (const item of arr) {
-        createListElements(item.task, item._id);
-        if (item.checked) {
-            newCheckbox.checked;
-        }
+        createListElements(item);
     }
 }
 
-function createListElements(input, id) {
+function createListElements({ task, _id, checked }) {
     const newItem = document.createElement('li');
-    newItem.id = id;
-    const task = document.createTextNode(input);
+    newItem.id = _id;
+    const taskTextNode = document.createTextNode(task);
 
 
     const newCheckbox = document.createElement('input');
@@ -37,7 +34,7 @@ function createListElements(input, id) {
     const newDelBtn = document.createElement('button');
     const btnText = document.createTextNode('delete');
 
-    newText.appendChild(task);
+    newText.appendChild(taskTextNode);
     newDelBtn.appendChild(btnText);
     newItem.appendChild(newCheckbox);
     newItem.appendChild(newText);
@@ -47,13 +44,22 @@ function createListElements(input, id) {
     newDelBtn.addEventListener('click', deleteTask);
     newCheckbox.addEventListener('click', changeStatus);
 
+    if (checked) {
+        newItem.classList.add('task-done');
+    } else {
+        newItem.classList.remove('task-done');
+    }
+
+    newCheckbox.checked = checked;
+
     return newCheckbox;
 }
 
 function createTask() {
     const inputVal = input.value;
-    createListElements(inputVal);
-    postTask(inputVal);
+    postTask(inputVal).then((data) => {
+        createListElements(data);
+    });
 }
 
 function postTask(newTask) {
@@ -73,16 +79,18 @@ function postTask(newTask) {
     }
 
  // send POST request   
-    fetch(ENDPOINT, options)
-        .then(res => res.json())
-        .then(res => console.log(res));
+    return fetch(ENDPOINT, options)
+        .then(res => {
+            console.log(`POST result: ${res.ok}`);
+            return res.json();
+        });
 }
 
-function deleteOnDatabase(newTask) {
-    // post body data 
+function deleteOnDatabase(id) {
+    // delete body data 
     const ENDPOINT = 'http://localhost/api/misdatos';
     const listItem = {
-        task: newTask,
+        _id: id,
     };
 // request options
     const options = {
@@ -93,19 +101,21 @@ function deleteOnDatabase(newTask) {
         }
     }
 
- // send POST request   
-    fetch(ENDPOINT, options)
-        .then(res => res.json())
-        .then(res => console.log(res));
+ // send DELETE request   
+    return fetch(ENDPOINT, options)
+    .then(res => {
+        console.log(`DELETE result: ${res.ok}`)
+    });
 }
 
 
 function deleteTask(event) {
     const currentBtn = event.currentTarget;   
-    const task =  currentBtn.previousSibling.textContent;
     const liItem = currentBtn.parentElement;
-    deleteOnDatabase(task);
-    liItem.remove();
+    const id = liItem.id;
+    deleteOnDatabase(id).then(() => {
+        liItem.remove();
+    });
 }
 
 function changeStatus(event) {
@@ -141,8 +151,9 @@ function updateOnDatabase(id, bool) {
 
  // send POST request   
     fetch(ENDPOINT, options)
-        .then(res => res.json())
-        .then(res => console.log(res));
+    .then(res => {
+        console.log(`PATCH result: ${res.ok}`)
+    });
 }
 
 function pressEnter(event) {

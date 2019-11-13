@@ -5,6 +5,8 @@ const app = express();
 const PORT = 3000;
 
 const mongodb = require('mongodb');
+
+const {ObjectId} = mongodb;
 const DB = {
 	config: 'mongodb://mongo:27017'
 };
@@ -28,36 +30,48 @@ client.connect(DB.config, function (err, db) {
 	}
 });
 app.get('/misdatos', function (req, res) {
-	let data = dbo.collection("micoleccion").find({}).toArray((err, result) => {
-		if (err) throw err;
-		res.json(result);
+	let data = dbo.collection("micoleccion").find({}).toArray((error, result) => {
+		if (error) {
+			res.sendStatus(400);
+		} else {
+			res.json(result);
+		}
 	});
 });
 
 app.post('/misdatos', function (req, res) {
-	var task = req.body;
+	const task = req.body;
 	console.log('body is:', task);
-	let data = dbo.collection("micoleccion").insert(task).toArray((err, result) => {
-		if (err) throw err;
-		res.json(result);		
+	let data = dbo.collection("micoleccion").insert(task, function(error, result) {
+		if (error) {
+			res.sendStatus(400);
+		} else {
+			res.json(result.ops[0]);
+		}
 	});
 });
 
 app.delete ('/misdatos', function (req, res) {
-	var task = req.body;
-	let data = dbo.collection("micoleccion").deleteOne(task).toArray((err, result) => {
-		if (err) throw err;
-		res.json(result);
+	const id = req.body._id;
+	let data = dbo.collection("micoleccion").deleteOne({_id: ObjectId(id)}, function(error) {
+		if (error) {
+			res.sendStatus(400);
+		} else {
+			res.sendStatus(204);
+		}
 	});
 });
 
 app.patch ('/misdatos', function (req, res) {
 	const id = req.body._id;
-	console.log(id);
-	var obj = req.body.checked;
-	let data = dbo.collection("micoleccion").updateOne({_id: id}, {$set: {checked: obj}}).toArray((err, result) => {
-		if (err) throw err;
-		res.json(result);
+	const status = req.body.checked;
+	console.log(id, status);
+	let data = dbo.collection("micoleccion").updateOne({_id: ObjectId(id)}, {$set: {checked: status}}, {upsert:true}, function(error) {
+		if (error) {
+			res.sendStatus(400);
+		} else {
+			res.sendStatus(204);
+		}
 	});
 });
 
