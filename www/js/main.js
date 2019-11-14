@@ -7,17 +7,21 @@ const listSection = document.querySelector('.main__list');
 const infoText = document.querySelector('.list__info');
 const ENDPOINT = 'http://localhost/api/misdatos';
 
+let numberTasks = 0;
+
 const noTaskMsg = 'no hay tareas';
-const taskMsg = 'aquí están tus tareas:';
+const taskMsg = `aquí están tus tareas:`;
 const noTaskInputMsg = 'Por favor, introduce una tarea';
 
 
+//get data function
 fetch(ENDPOINT)
     .then(res => res.json())
     .then(data => {
         return printList(data);
     });
 
+//
 function printList(arr) {
     if (arr.length === 0) { 
         updateMsg(noTaskMsg);
@@ -25,17 +29,17 @@ function printList(arr) {
     } else {
         for (const item of arr) {
             createListElements(item);
-        }
+        };
     }
 }
 
-function updateMsg(txt) {
+function updateMsg(txt, number) {
     if ((txt === noTaskMsg) ||(txt === noTaskInputMsg)) {
         infoText.classList.add('emptyMsg');
     } else {
         infoText.classList.remove('emptyMsg');
     }
-    infoText.innerHTML = txt;
+    infoText.innerHTML = txt + `Tienes ${number} tareas pendientes`;
 
 }
 
@@ -74,10 +78,12 @@ function createListElements({ _id, task, checked }) {
     
     newDelBtn.addEventListener('click', deleteTask);
     newCheckbox.addEventListener('click', updateStatus);
-    
-    updateMsg(taskMsg);
+    numberTasks ++;
+
+    updateMsg(taskMsg, numberTasks);
 }
 
+//interaction functions
 function isCheked(liItem, checkBox, status) {
     if (status) {
         checkBox.checked = true;
@@ -101,6 +107,22 @@ function createTask() {
     input.value = '';
 }
 
+function updateStatus(event) {
+    const currentBox = event.currentTarget;
+    const liItem = currentBox.parentElement;
+    const itemId = liItem.id;
+    const status = currentBox.checked;
+
+    if (status) {
+        liItem.classList.add('task-done');
+    }
+    else {
+        liItem.classList.remove('task-done');
+    }
+
+    patchOnDatabase(itemId, status);
+}
+
 function deleteTask(event) {
     const currentBtn = event.currentTarget;
     const liItem = currentBtn.parentElement;
@@ -110,9 +132,12 @@ function deleteTask(event) {
             liItem.remove();                
         })
         .then(()=> changeTxt());  
-     
+    
+    numberTasks --;
+    updateMsg(taskMsg, numberTasks);
 }
 
+//call API functions
 function postOnDataBase(newTask) {
     // post body data 
     const listItem = {
@@ -182,26 +207,6 @@ function changeTxt () {
     const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg):null;   
     return isEmpty; 
 }
-
-
-
-
-function updateStatus(event) {
-    const currentBox = event.currentTarget;
-    const liItem = currentBox.parentElement;
-    const itemId = liItem.id;
-    const status = currentBox.checked;
-
-    if (status) {
-        liItem.classList.add('task-done');
-    }
-    else {
-        liItem.classList.remove('task-done');
-    }
-
-    patchOnDatabase(itemId, status);
-}
-
 
 
 function pressEnter(event) {
