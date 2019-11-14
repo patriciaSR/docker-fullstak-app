@@ -29,7 +29,6 @@ function printList(arr) {
     }
 }
 
-
 function updateMsg(txt) {
     if ((txt === noTaskMsg) ||(txt === noTaskInputMsg)) {
         infoText.classList.add('emptyMsg');
@@ -38,27 +37,6 @@ function updateMsg(txt) {
     }
     infoText.innerHTML = txt;
 
-}
-
-function createListElements({ _id, task, checked }) {
-
-    const newItem = document.createElement('li');
-    newItem.classList.add('list__item')
-    newItem.id = _id;
-
-    const newCheckbox = createTag('input', null, null, 'checkbox');
-    const newText = createTag('p', task);
-    const newDelBtn = createTag('button', '-');
-
-    isCheked(newItem, newCheckbox, checked);
-    
-    createNodeAdopt(newItem, newCheckbox, newText, newDelBtn);
-    list.appendChild(newItem);
-    
-    newDelBtn.addEventListener('click', deleteTask);
-    newCheckbox.addEventListener('click', changeStatus);
-    
-    updateMsg(taskMsg);
 }
 
 function createTag(tag, text, newClass, newType) {
@@ -79,6 +57,27 @@ function createNodeAdopt(mother, ...rest) {
     return newMother;
 }
 
+function createListElements({ _id, task, checked }) {
+
+    const newItem = document.createElement('li');
+    newItem.classList.add('list__item')
+    newItem.id = _id;
+
+    const newCheckbox = createTag('input', null, null, 'checkbox');
+    const newText = createTag('p', task);
+    const newDelBtn = createTag('button', '-');
+
+    isCheked(newItem, newCheckbox, checked);
+    
+    createNodeAdopt(newItem, newCheckbox, newText, newDelBtn);
+    list.appendChild(newItem);
+    
+    newDelBtn.addEventListener('click', deleteTask);
+    newCheckbox.addEventListener('click', updateStatus);
+    
+    updateMsg(taskMsg);
+}
+
 function isCheked(liItem, checkBox, status) {
     if (status) {
         checkBox.checked = true;
@@ -94,7 +93,7 @@ function createTask() {
     if (input.value === '') {
         updateMsg(noTaskInputMsg);
     } else {
-        postTask(inputVal).then((data) => {
+        postOnDataBase(inputVal).then((data) => {
             createListElements(data);
         });
     };
@@ -102,7 +101,19 @@ function createTask() {
     input.value = '';
 }
 
-function postTask(newTask) {
+function deleteTask(event) {
+    const currentBtn = event.currentTarget;
+    const liItem = currentBtn.parentElement;
+    const id = liItem.id;
+    deleteOnDatabase(id)
+        .then(() => {
+            liItem.remove();                
+        })
+        .then(()=> changeTxt());  
+     
+}
+
+function postOnDataBase(newTask) {
     // post body data 
     const listItem = {
         task: newTask,
@@ -121,6 +132,28 @@ function postTask(newTask) {
     return fetch(ENDPOINT, options)
         .then(res => {            
             return res.json();
+        });
+}
+
+function patchOnDatabase(id, bool) {
+    // patch body data 
+    const listItem = {
+        _id: id,
+        checked: bool
+    };
+    // request options
+    const options = {
+        method: 'PATCH',
+        body: JSON.stringify(listItem),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    // send PATCH request   
+    fetch(ENDPOINT, options)
+        .then(res => {
+            console.log(`PATCH result: ${res.ok}`)
         });
 }
 
@@ -145,27 +178,15 @@ function deleteOnDatabase(id) {
         });
 }
 
-
 function changeTxt () {
     const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg):null;   
     return isEmpty; 
 }
 
-function deleteTask(event) {
-    const currentBtn = event.currentTarget;
-    const liItem = currentBtn.parentElement;
-    const id = liItem.id;
-    deleteOnDatabase(id)
-        .then(() => {
-            liItem.remove();                
-        })
-        .then(()=> changeTxt());  
-     
-}
 
 
 
-function changeStatus(event) {
+function updateStatus(event) {
     const currentBox = event.currentTarget;
     const liItem = currentBox.parentElement;
     const itemId = liItem.id;
@@ -178,30 +199,10 @@ function changeStatus(event) {
         liItem.classList.remove('task-done');
     }
 
-    updateOnDatabase(itemId, status);
+    patchOnDatabase(itemId, status);
 }
 
-function updateOnDatabase(id, bool) {
-    // patch body data 
-    const listItem = {
-        _id: id,
-        checked: bool
-    };
-    // request options
-    const options = {
-        method: 'PATCH',
-        body: JSON.stringify(listItem),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }
 
-    // send PATCH request   
-    fetch(ENDPOINT, options)
-        .then(res => {
-            console.log(`PATCH result: ${res.ok}`)
-        });
-}
 
 function pressEnter(event) {
     if (event.key === 'Enter') {
