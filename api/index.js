@@ -1,18 +1,16 @@
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3000;
 
-const cors = require('cors');
-const bodyParser = require('body-parser');
-
-
 const mongodb = require('mongodb');
+
+const {ObjectId} = mongodb;
 const DB = {
 	config: 'mongodb://mongo:27017'
 };
 let dbo;
-
-const { ObjectId } = mongodb;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -32,39 +30,48 @@ client.connect(DB.config, function (err, db) {
 	}
 });
 app.get('/misdatos', function (req, res) {
-	let data = dbo.collection("micoleccion").find({}).toArray((err, result) => {
-		if (err) throw err;
-		res.json(result);
+	let data = dbo.collection("micoleccion").find({}).toArray((error, result) => {
+		if (error) {
+			res.sendStatus(400);
+		} else {
+			res.json(result);
+		}
 	});
 });
 
 app.post('/misdatos', function (req, res) {
-	var task = req.body;
+	const task = req.body;
 	console.log('body is:', task);
-	let data = dbo.collection("micoleccion").insert(task, function (err, result) {
-		if (err) {
-			res.sendStatus(400)
-		}else {
+	let data = dbo.collection("micoleccion").insert(task, function(error, result) {
+		if (error) {
+			res.sendStatus(400);
+		} else {
 			res.json(result.ops[0]);
-		}		
+		}
 	});
 });
 
-app.delete('/misdatos', function (req, res) {
-	var task = req.body;
-	let data = dbo.collection("micoleccion").deleteOne(task).toArray((err, result) => {
-		if (err) throw err;
-		res.json(result);
+app.delete ('/misdatos', function (req, res) {
+	const id = req.body._id;
+	let data = dbo.collection("micoleccion").deleteOne({_id: ObjectId(id)}, function(error) {
+		if (error) {
+			res.sendStatus(400);
+		} else {
+			res.sendStatus(204);
+		}
 	});
 });
 
 app.patch('/misdatos', function (req, res) {
 	const id = req.body._id;
-	console.log(id);
-	var status = req.body.checked;
-	let data = dbo.collection("micoleccion").updateOne({ _id: ObjectId(id) }, { $set: { checked: status } }, { upsert: true }).toArray((err, result) => {
-		if (err) throw err;
-		res.json(result);
+	const status = req.body.checked;
+	console.log(id, status);
+	let data = dbo.collection("micoleccion").updateOne({_id: ObjectId(id)}, {$set: {checked: status}}, {upsert:true}, function(error) {
+		if (error) {
+			res.sendStatus(400);
+		} else {
+			res.sendStatus(204);
+		}
 	});
 });
 

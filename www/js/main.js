@@ -14,7 +14,7 @@ fetch('http://localhost/api/misdatos')
     });
 
 function printList(arr) {
-    if (arr === []) {
+    if (arr.length === 0) {
         printNoDataMsg();
     } else {
         for (const item of arr) {
@@ -73,7 +73,9 @@ function createListElements({ _id, task, checked }) {
 
 function createTask() {
     const inputVal = input.value;
-    postTask(inputVal).then(data =>  createListElements(data));
+    postTask(inputVal).then((data) => {
+        createListElements(data);
+    });
 }
 
 function postTask(newTask) {
@@ -92,18 +94,19 @@ function postTask(newTask) {
         }
     }
 
-    // send POST request  
+ // send POST request   
     return fetch(ENDPOINT, options)
         .then(res => {
+            console.log(`POST result: ${res.ok}`);
             return res.json();
         });
 }
 
-function deleteOnDatabase(newTask) {
-    // post body data 
+function deleteOnDatabase(id) {
+    // delete body data 
     const ENDPOINT = 'http://localhost/api/misdatos';
     const listItem = {
-        task: newTask,
+        _id: id,
     };
     // request options
     const options = {
@@ -114,19 +117,21 @@ function deleteOnDatabase(newTask) {
         }
     }
 
-    // send POST request   
-    fetch(ENDPOINT, options)
-        .then(res => res.json())
-        .then(res => console.log(res));
+ // send DELETE request   
+    return fetch(ENDPOINT, options)
+    .then(res => {
+        console.log(`DELETE result: ${res.ok}`)
+    });
 }
 
 
 function deleteTask(event) {
-    const currentBtn = event.currentTarget;
-    const task = currentBtn.previousSibling.textContent;
+    const currentBtn = event.currentTarget;   
     const liItem = currentBtn.parentElement;
-    deleteOnDatabase(task);
-    liItem.remove();
+    const id = liItem.id;
+    deleteOnDatabase(id).then(() => {
+        liItem.remove();
+    });
 }
 
 
@@ -165,8 +170,9 @@ function updateOnDatabase(id, bool) {
 
     // send POST request   
     fetch(ENDPOINT, options)
-        .then(res => res.json())
-        .then(res => console.log(res));
+    .then(res => {
+        console.log(`PATCH result: ${res.ok}`)
+    });
 }
 
 function pressEnter(event) {
