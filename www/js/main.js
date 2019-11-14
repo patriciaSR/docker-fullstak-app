@@ -9,7 +9,7 @@ const listSection = document.querySelector('.main__list');
 fetch('http://localhost/api/misdatos')
     .then(res => res.json())
     .then(data => {
-        console.log(data);
+        console.log('initial print ->', data);
         return printList(data);
     });
 
@@ -38,24 +38,14 @@ function removeEmptyMsg() {
     }
 }
 
-function createListElements(data) {
-    removeEmptyMsg();
-    const { _id, task, checked } = data;
+function createListElements({ _id, task, checked }) {
+    // removeEmptyMsg();    
     const newItem = document.createElement('li');
     newItem.id = _id;
     const taskT = document.createTextNode(task);
 
     const newCheckbox = document.createElement('input');
     newCheckbox.type = 'checkbox';
-
-    if (checked) {
-        newCheckbox.checked = true;
-        newItem.classList.add('task-done');
-    }
-    else {
-        newItem.classList.remove('task-done');
-    }
-
     const newText = document.createElement('p');
 
     const newDelBtn = document.createElement('button');
@@ -71,11 +61,19 @@ function createListElements(data) {
     newDelBtn.addEventListener('click', deleteTask);
     newCheckbox.addEventListener('click', changeStatus);
 
+    if (checked) {
+        newCheckbox.checked = true;
+        newItem.classList.add('task-done');
+    }
+    else {
+        newItem.classList.remove('task-done');
+    }
+
 }
 
 function createTask() {
     const inputVal = input.value;
-    postTask(inputVal).then(data => createListElements(data));
+    postTask(inputVal).then(data =>  createListElements(data));
 }
 
 function postTask(newTask) {
@@ -96,8 +94,9 @@ function postTask(newTask) {
 
     // send POST request  
     return fetch(ENDPOINT, options)
-        .then(res => res.json());
-
+        .then(res => {
+            return res.json();
+        });
 }
 
 function deleteOnDatabase(newTask) {
