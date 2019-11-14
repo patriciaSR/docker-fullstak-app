@@ -9,8 +9,8 @@ const ENDPOINT = 'http://localhost/api/misdatos';
 
 let numberTasks = 0;
 
-const noTaskMsg = 'no hay tareas';
-const taskMsg = `aquí están tus tareas:`;
+const noTaskMsg = 'No tienes tareas';
+const taskMsg = `Aquí están tus tareas: `;
 const noTaskInputMsg = 'Por favor, introduce una tarea';
 
 
@@ -36,11 +36,11 @@ function printList(arr) {
 function updateMsg(txt, number) {
     if ((txt === noTaskMsg) ||(txt === noTaskInputMsg)) {
         infoText.classList.add('emptyMsg');
+        infoText.innerHTML = txt;
     } else {
         infoText.classList.remove('emptyMsg');
+        infoText.innerHTML = txt + `Tienes ${number} tareas pendientes`;
     }
-    infoText.innerHTML = txt + `Tienes ${number} tareas pendientes`;
-
 }
 
 function createTag(tag, text, newClass, newType) {
@@ -130,11 +130,15 @@ function deleteTask(event) {
     deleteOnDatabase(id)
         .then(() => {
             liItem.remove();                
-        })
-        .then(()=> changeTxt());  
+        });
     
     numberTasks --;
-    updateMsg(taskMsg, numberTasks);
+    
+    if (numberTasks !== 0) {
+        updateMsg(taskMsg, numberTasks);
+    }else {
+        updateMsg(noTaskMsg);
+    }
 }
 
 //call API functions
