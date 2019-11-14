@@ -39,7 +39,7 @@ function updateMsg(txt, number) {
         infoText.innerHTML = txt;
     } else {
         infoText.classList.remove('emptyMsg');
-        infoText.innerHTML = txt + `Tienes ${number} tareas pendientes`;
+        infoText.innerHTML = txt + `Tienes ${number} tareas`;
     }
 }
 
@@ -69,7 +69,7 @@ function createListElements({ _id, task, checked }) {
 
     const newCheckbox = createTag('input', null, null, 'checkbox');
     const newText = createTag('p', task);
-    const newDelBtn = createTag('button', '-');
+    const newDelBtn = createTag('button', '-', 'delete__btn');
 
     isCheked(newItem, newCheckbox, checked);
     
