@@ -3,32 +3,52 @@
 const input = document.querySelector('.create__field');
 const btn = document.querySelector('.create__btn');
 const list = document.querySelector('.list');
+const listSection = document.querySelector('.main__list');
 
 
 fetch('http://localhost/api/misdatos')
     .then(res => res.json())
     .then(data => {
-        const taskArray = data;
-        return printList(taskArray);
-    }
-    )
+        console.log(data);
+        return printList(data);
+    });
 
 function printList(arr) {
-    for (const item of arr) {
-        createListElements(item.task, item._id, item.checked);
+    if (arr === []) {
+        printNoDataMsg();
+    } else {
+        for (const item of arr) {
+            createListElements(item);
+        }
     }
 }
 
-function createListElements(input, id, status) {
-    const newItem = document.createElement('li');
-    newItem.id = id;
-    const task = document.createTextNode(input);
+function printNoDataMsg() {
+    const message = document.createElement('p');
+    message.classList.add('emptyMsg');
+    const messageText = document.createTextNode('No hay tareas pendientes, añade alguna');
+    message.appendChild(messageText);
+    listSection.insertBefore(message, list);
+}
 
+function removeEmptyMsg() {
+    if (list.innerHTML === '') {
+        const text = document.querySelector('emptyMsg');
+        listSsection.removeChild(text);
+    }
+}
+
+function createListElements(data) {
+    removeEmptyMsg();
+    const { _id, task, checked } = data;
+    const newItem = document.createElement('li');
+    newItem.id = _id;
+    const taskT = document.createTextNode(task);
 
     const newCheckbox = document.createElement('input');
     newCheckbox.type = 'checkbox';
- 
-    if (status) {
+
+    if (checked) {
         newCheckbox.checked = true;
         newItem.classList.add('task-done');
     }
@@ -36,13 +56,12 @@ function createListElements(input, id, status) {
         newItem.classList.remove('task-done');
     }
 
+    const newText = document.createElement('p');
 
-    const newText = document.createElement('p');    
-    
     const newDelBtn = document.createElement('button');
     const btnText = document.createTextNode('delete');
 
-    newText.appendChild(task);
+    newText.appendChild(taskT);
     newDelBtn.appendChild(btnText);
     newItem.appendChild(newCheckbox);
     newItem.appendChild(newText);
@@ -56,18 +75,17 @@ function createListElements(input, id, status) {
 
 function createTask() {
     const inputVal = input.value;
-    createListElements(inputVal);
-    postTask(inputVal);
+    postTask(inputVal).then(data => createListElements(data));
 }
 
 function postTask(newTask) {
-// post body data 
+    // post body data 
     const ENDPOINT = 'http://localhost/api/misdatos';
     const listItem = {
         task: newTask,
         checked: false
     };
-// request options
+    // request options
     const options = {
         method: 'POST',
         body: JSON.stringify(listItem),
@@ -76,10 +94,10 @@ function postTask(newTask) {
         }
     }
 
- // send POST request   
-    fetch(ENDPOINT, options)
-        .then(res => res.json())
-        .then(res => console.log(res));
+    // send POST request  
+    return fetch(ENDPOINT, options)
+        .then(res => res.json());
+
 }
 
 function deleteOnDatabase(newTask) {
@@ -88,7 +106,7 @@ function deleteOnDatabase(newTask) {
     const listItem = {
         task: newTask,
     };
-// request options
+    // request options
     const options = {
         method: 'DELETE',
         body: JSON.stringify(listItem),
@@ -97,7 +115,7 @@ function deleteOnDatabase(newTask) {
         }
     }
 
- // send POST request   
+    // send POST request   
     fetch(ENDPOINT, options)
         .then(res => res.json())
         .then(res => console.log(res));
@@ -105,8 +123,8 @@ function deleteOnDatabase(newTask) {
 
 
 function deleteTask(event) {
-    const currentBtn = event.currentTarget;   
-    const task =  currentBtn.previousSibling.textContent;
+    const currentBtn = event.currentTarget;
+    const task = currentBtn.previousSibling.textContent;
     const liItem = currentBtn.parentElement;
     deleteOnDatabase(task);
     liItem.remove();
@@ -119,7 +137,7 @@ function changeStatus(event) {
     const liItem = currentBox.parentElement;
     const itemId = liItem.id;
     const status = currentBox.checked;
-    
+
     if (status) {
         liItem.classList.add('task-done');
     }
@@ -137,7 +155,7 @@ function updateOnDatabase(id, bool) {
         _id: id,
         checked: bool
     };
-// request options
+    // request options
     const options = {
         method: 'PATCH',
         body: JSON.stringify(listItem),
@@ -146,7 +164,7 @@ function updateOnDatabase(id, bool) {
         }
     }
 
- // send POST request   
+    // send POST request   
     fetch(ENDPOINT, options)
         .then(res => res.json())
         .then(res => console.log(res));

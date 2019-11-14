@@ -18,3 +18,8 @@ npm install body-parse --save
 
 logs del contenedor del servidor app:
 docker-compose logs app
+
+
+para borrar dentro de mongo elementos de la base de datos:
+
+db.micoleccion.deleteOne({objeto})
