@@ -15,14 +15,11 @@ fetch('http://localhost/api/misdatos')
 
 function printList(arr) {
     for (const item of arr) {
-        createListElements(item.task, item._id);
-        if (item.checked) {
-            newCheckbox.checked;
-        }
+        createListElements(item.task, item._id, item.checked);
     }
 }
 
-function createListElements(input, id) {
+function createListElements(input, id, status) {
     const newItem = document.createElement('li');
     newItem.id = id;
     const task = document.createTextNode(input);
@@ -30,9 +27,17 @@ function createListElements(input, id) {
 
     const newCheckbox = document.createElement('input');
     newCheckbox.type = 'checkbox';
+ 
+    if (status) {
+        newCheckbox.checked = true;
+        newItem.classList.add('task-done');
+    }
+    else {
+        newItem.classList.remove('task-done');
+    }
 
-    const newText = document.createElement('p');
-    
+
+    const newText = document.createElement('p');    
     
     const newDelBtn = document.createElement('button');
     const btnText = document.createTextNode('delete');
@@ -47,7 +52,6 @@ function createListElements(input, id) {
     newDelBtn.addEventListener('click', deleteTask);
     newCheckbox.addEventListener('click', changeStatus);
 
-    return newCheckbox;
 }
 
 function createTask() {
@@ -108,11 +112,14 @@ function deleteTask(event) {
     liItem.remove();
 }
 
+
+
 function changeStatus(event) {
     const currentBox = event.currentTarget;
     const liItem = currentBox.parentElement;
     const itemId = liItem.id;
     const status = currentBox.checked;
+    
     if (status) {
         liItem.classList.add('task-done');
     }
