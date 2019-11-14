@@ -63,15 +63,20 @@ function createListElements({ _id, task, checked }) {
     newDelBtn.addEventListener('click', deleteTask);
     newCheckbox.addEventListener('click', changeStatus);
 
-    if (checked) {
-        newCheckbox.checked = true;
-        newItem.classList.add('task-done');
-    }
-    else {
-        newItem.classList.remove('task-done');
-    }
+    isCheked(newItem, newCheckbox, checked);
+
     updateMsg('aquí están tus tareas:');
 }
+
+function isCheked(liItem, checkBox, status) {
+    if (status) {
+        checkBox.checked = true;
+        liItem.classList.add('task-done');
+    }
+    else {
+        liItem.classList.remove('task-done');
+    }
+};
 
 function createTask() {
     const inputVal = input.value;
