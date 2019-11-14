@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,22 +8,25 @@
   <link rel="stylesheet" href="styles/main.css">
   <title>To Do List</title>
 </head>
+
 <body>
   <header class="app__header">
-      <h1 class="">To Do List</h1>
+    <h1 class="">To Do List</h1>
   </header>
   <main class="app__main">
+    <section class="main__create">
+      <input class="create__field" type="text" />
+      <button class="create__btn">create</button>
+    </section>
     <section class="main__list">
+      <p class="list__info"></p>
       <ul class="list">
 
       </ul>
     </section>
-    <section class="main__create">
-      <input class="create__field" type="text"/>
-      <button class="create__btn">create</button>
-    </section>
   </main>
- 
+
   <script src="js/main.js"></script>
 </body>
+
 </html>
