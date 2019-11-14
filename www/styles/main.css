@@ -7,3 +7,31 @@ body{color: blue;}
 .emptyMsg {
     color:red;
 }
+
+.list{
+    margin:0;
+    padding:0;
+    width:500px;
+    background-color:pink;
+}
+
+.list__item{
+    margin-top:10px;
+    display:flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    width:100%;    
+}
+
+.list__item > p {
+    margin :0 10px;
+    flex-grow:1;
+}
+
+.list__item > button {
+  
+}
+
+.main__create{
+    margin-bottom: 30px;
+}

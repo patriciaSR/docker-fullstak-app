@@ -4,18 +4,23 @@ const input = document.querySelector('.create__field');
 const btn = document.querySelector('.create__btn');
 const list = document.querySelector('.list');
 const listSection = document.querySelector('.main__list');
+const infoText = document.querySelector('.list__info');
+const ENDPOINT = 'http://localhost/api/misdatos';
+
+const noTaskMsg = 'no hay tareas';
+const noTaskInputMsg = 'Por favor, introduce una tarea';
 
 
-fetch('http://localhost/api/misdatos')
+fetch(ENDPOINT)
     .then(res => res.json())
     .then(data => {
-        console.log('initial print ->', data);
         return printList(data);
     });
 
 function printList(arr) {
-    if (arr.length === 0) {
-        printNoDataMsg();
+    if (arr.length === 0) { 
+        updateMsg(noTaskMsg);
+
     } else {
         for (const item of arr) {
             createListElements(item);
@@ -23,24 +28,21 @@ function printList(arr) {
     }
 }
 
-function printNoDataMsg() {
-    const message = document.createElement('p');
-    message.classList.add('emptyMsg');
-    const messageText = document.createTextNode('No hay tareas pendientes, añade alguna');
-    message.appendChild(messageText);
-    listSection.insertBefore(message, list);
-}
 
-function removeEmptyMsg() {
-    if (list.innerHTML === '') {
-        const text = document.querySelector('emptyMsg');
-        listSsection.removeChild(text);
+function updateMsg(txt) {
+    if ((txt === noTaskMsg) ||(txt === noTaskInputMsg)) {
+        infoText.classList.add('emptyMsg');
+    } else {
+        infoText.classList.remove('emptyMsg');
     }
+    infoText.innerHTML = txt;
+
 }
 
 function createListElements({ _id, task, checked }) {
-    // removeEmptyMsg();    
+
     const newItem = document.createElement('li');
+    newItem.classList.add('list__item')
     newItem.id = _id;
     const taskT = document.createTextNode(task);
 
@@ -49,7 +51,7 @@ function createListElements({ _id, task, checked }) {
     const newText = document.createElement('p');
 
     const newDelBtn = document.createElement('button');
-    const btnText = document.createTextNode('delete');
+    const btnText = document.createTextNode('-');
 
     newText.appendChild(taskT);
     newDelBtn.appendChild(btnText);
@@ -68,19 +70,22 @@ function createListElements({ _id, task, checked }) {
     else {
         newItem.classList.remove('task-done');
     }
-
+    updateMsg('aquí están tus tareas:');
 }
 
 function createTask() {
     const inputVal = input.value;
-    postTask(inputVal).then((data) => {
-        createListElements(data);
-    });
+    if (input.value === '') {
+        updateMsg(noTaskInputMsg);
+    } else {
+        postTask(inputVal).then((data) => {
+            createListElements(data);
+        });
+    }
 }
 
 function postTask(newTask) {
     // post body data 
-    const ENDPOINT = 'http://localhost/api/misdatos';
     const listItem = {
         task: newTask,
         checked: false
@@ -94,17 +99,15 @@ function postTask(newTask) {
         }
     }
 
- // send POST request   
+    // send POST request   
     return fetch(ENDPOINT, options)
-        .then(res => {
-            console.log(`POST result: ${res.ok}`);
+        .then(res => {            
             return res.json();
         });
 }
 
 function deleteOnDatabase(id) {
     // delete body data 
-    const ENDPOINT = 'http://localhost/api/misdatos';
     const listItem = {
         _id: id,
     };
@@ -117,21 +120,29 @@ function deleteOnDatabase(id) {
         }
     }
 
- // send DELETE request   
+    // send DELETE request   
     return fetch(ENDPOINT, options)
-    .then(res => {
-        console.log(`DELETE result: ${res.ok}`)
-    });
+        .then(res => {
+            console.log(`DELETE result: ${res.ok}`)
+        });
 }
 
 
+function changeTxt () {
+    const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg):null;   
+    return isEmpty; 
+}
+
 function deleteTask(event) {
-    const currentBtn = event.currentTarget;   
+    const currentBtn = event.currentTarget;
     const liItem = currentBtn.parentElement;
     const id = liItem.id;
-    deleteOnDatabase(id).then(() => {
-        liItem.remove();
-    });
+    deleteOnDatabase(id)
+        .then(() => {
+            liItem.remove();                
+        })
+        .then(()=> changeTxt());  
+     
 }
 
 
@@ -153,8 +164,7 @@ function changeStatus(event) {
 }
 
 function updateOnDatabase(id, bool) {
-    // post body data 
-    const ENDPOINT = 'http://localhost/api/misdatos';
+    // patch body data 
     const listItem = {
         _id: id,
         checked: bool
@@ -168,11 +178,11 @@ function updateOnDatabase(id, bool) {
         }
     }
 
-    // send POST request   
+    // send PATCH request   
     fetch(ENDPOINT, options)
-    .then(res => {
-        console.log(`PATCH result: ${res.ok}`)
-    });
+        .then(res => {
+            console.log(`PATCH result: ${res.ok}`)
+        });
 }
 
 function pressEnter(event) {
