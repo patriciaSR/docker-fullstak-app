@@ -12,7 +12,7 @@ const DB = {
 };
 let dbo;
 
-const {ObjectId} = mongodb;
+const { ObjectId } = mongodb;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -41,13 +41,16 @@ app.get('/misdatos', function (req, res) {
 app.post('/misdatos', function (req, res) {
 	var task = req.body;
 	console.log('body is:', task);
-	let data = dbo.collection("micoleccion").insert(task).toArray((err, result) => {
-		if (err) throw err;
-		res.json(result);		
+	let data = dbo.collection("micoleccion").insert(task, function (err, result) {
+		if (err) {
+			res.sendStatus(400)
+		}else {
+			res.json(result.ops[0]);
+		}		
 	});
 });
 
-app.delete ('/misdatos', function (req, res) {
+app.delete('/misdatos', function (req, res) {
 	var task = req.body;
 	let data = dbo.collection("micoleccion").deleteOne(task).toArray((err, result) => {
 		if (err) throw err;
@@ -55,11 +58,11 @@ app.delete ('/misdatos', function (req, res) {
 	});
 });
 
-app.patch ('/misdatos', function (req, res) {
+app.patch('/misdatos', function (req, res) {
 	const id = req.body._id;
 	console.log(id);
 	var status = req.body.checked;
-	let data = dbo.collection("micoleccion").updateOne({_id: ObjectId(id)}, {$set: {checked: status}}, {upsert: true}).toArray((err, result) => {
+	let data = dbo.collection("micoleccion").updateOne({ _id: ObjectId(id) }, { $set: { checked: status } }, { upsert: true }).toArray((err, result) => {
 		if (err) throw err;
 		res.json(result);
 	});
