@@ -1,5 +1,5 @@
 body {
-    color: blue;
+    color: #4c77fb;;
 }
 
 header {
@@ -8,7 +8,7 @@ header {
 }
 
 .task-done {
-    background-color: lightgreen;        
+    background-color: rgba(144, 238, 144, 0.589);        
 }
 .task-done > p {
     text-decoration: line-through;
@@ -27,7 +27,6 @@ header {
     margin-top:10px;
     display:flex;
     justify-content: space-between;
-    /* align-items: center; */
     width:100%;    
 }
 
@@ -36,9 +35,6 @@ header {
     flex-grow: 1;
 }
 
-.list__item > button {
-  
-}
 
 .app__main {
     background-color: #F5F5F5;
@@ -60,11 +56,19 @@ header {
     border-radius: 8px;
     border: 1px solid #4c77fb;
     background-color: white;
+    color:#2a448f;
+}
+
+.create__field::placeholder {
+    color:lightgrey;
 }
 
 .list__info{
     font-size: 18px;
 }
+/* .list__info > span {
+    font-weight: 700;
+} */
 
 /* botones */
 .create__btn {

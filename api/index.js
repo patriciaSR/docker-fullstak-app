@@ -51,6 +51,8 @@ app.post('/misdatos', function (req, res) {
 	});
 });
 
+
+
 app.delete ('/misdatos', function (req, res) {
 	const id = req.body._id;
 	let data = dbo.collection("micoleccion").deleteOne({_id: ObjectId(id)}, function(error) {
@@ -61,6 +63,18 @@ app.delete ('/misdatos', function (req, res) {
 		}
 	});
 });
+
+app.delete ('/misdatos/delete', function (req, res) {
+	let data = dbo.collection("micoleccion").deleteMany({ "checked" : true }, function(error){
+		if (error) {		
+			res.sendStatus(400);
+		} else {
+			res.sendStatus(204);
+		}
+	});
+});
+
+
 
 app.patch('/misdatos', function (req, res) {
 	const id = req.body._id;

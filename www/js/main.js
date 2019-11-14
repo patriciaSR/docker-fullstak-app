@@ -5,6 +5,7 @@ const btn = document.querySelector('.create__btn');
 const list = document.querySelector('.list');
 const listSection = document.querySelector('.main__list');
 const infoText = document.querySelector('.list__info');
+const deleteManyBtn = document.querySelector('.deletemany');
 const ENDPOINT = 'http://localhost/api/misdatos';
 
 let numberTasks = 0;
@@ -39,7 +40,7 @@ function updateMsg(txt, number) {
         infoText.innerHTML = txt;
     } else {
         infoText.classList.remove('emptyMsg');
-        infoText.innerHTML = txt + `Tienes ${number} tareas`;
+        infoText.innerHTML = txt + `Tienes <strong>${number}</strong> tareas`;
     }
 }
 
@@ -207,6 +208,24 @@ function deleteOnDatabase(id) {
         });
 }
 
+function deleteManyDatabase() {
+
+    // request options
+    const options = {
+        method: 'DELETE',
+        body: JSON.stringify(),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    // send DELETE request   
+    return fetch('http://localhost/api/misdatos/delete', options)
+        .then(res => {
+            console.log(`DELETEMANY result: ${res.ok}`)
+        });
+}
+
 function changeTxt () {
     const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg):null;   
     return isEmpty; 
@@ -221,4 +240,5 @@ function pressEnter(event) {
 
 btn.addEventListener('click', createTask);
 document.addEventListener('keyup', pressEnter);
+deleteManyBtn.addEventListener('click', deleteManyDatabase);
 

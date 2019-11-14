@@ -23,3 +23,12 @@ docker-compose logs app
 para borrar dentro de mongo elementos de la base de datos:
 
 db.micoleccion.deleteOne({objeto})
+
+
+## CADA VEZ QUE MODIFIQUEMOS EL INDEX.JS DE APP (NUESTRO BACK):
+
+colocados sobre la carpeta api:
+
+docker-compose down
+docker-compose build
+docker-compose up -d
