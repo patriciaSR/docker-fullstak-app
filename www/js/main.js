@@ -81,7 +81,9 @@ function createTask() {
         postTask(inputVal).then((data) => {
             createListElements(data);
         });
-    }
+    };
+
+    input.value = '';
 }
 
 function postTask(newTask) {
