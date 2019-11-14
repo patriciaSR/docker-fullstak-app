@@ -226,6 +226,18 @@ function deleteManyDatabase() {
         });
 }
 
+function deleteDoneTask () {
+    const listItem = document.querySelectorAll('li');
+    for (const item of listItem) {
+        const checkBox = item.firstChild;
+        if (checkBox.checked === true) {
+            item.remove();
+        }
+    }
+    console.log(listItem);
+    deleteManyDatabase();
+}
+
 function changeTxt () {
     const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg):null;   
     return isEmpty; 
@@ -240,5 +252,5 @@ function pressEnter(event) {
 
 btn.addEventListener('click', createTask);
 document.addEventListener('keyup', pressEnter);
-deleteManyBtn.addEventListener('click', deleteManyDatabase);
+deleteManyBtn.addEventListener('click', deleteDoneTask);
 
