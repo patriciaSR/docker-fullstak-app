@@ -1,5 +1,15 @@
 # algunas pistas para empezar a saltar las piedras del camino:
 
+## Instalación
+
+La instalación de docker y docker-compose para crear 3 contenedores para crear esta aplicación seguimos los pasos del repositorio [introducción a docker](https://github.com/manufosela/introduccion-docker).
+
+
+Para arrancar esta aplicación desde la carpeta `/api` lanzar los siguientes comandos:
+- `docker-compose down`
+- `docker-compose build`
+- `docker-compose up -d`
+
 solución al error de CORS:
 https://expressjs.com/en/resources/middleware/cors.html
 
@@ -52,9 +62,3 @@ Con githubpages lo puedes subir (html css js etc) y haces las llamadas a la api 
 
 con FIREBASE podrías pero sólamente tendrías la base de datos. Te provee una api para llamar a los endpoints. 
 
-## Instalación
-
-Para arrancar esta aplicación desde la carper `/api` lanzar los siguientes comandos:
-- `docker-compose down`
-- `docker-compose build`
-- `docker-compose up -d`
