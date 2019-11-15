@@ -5,6 +5,7 @@ const btn = document.querySelector('.create__btn');
 const list = document.querySelector('.list');
 const listSection = document.querySelector('.main__list');
 const infoText = document.querySelector('.list__info');
+const deleteManyBtn = document.querySelector('.deletemany');
 const ENDPOINT = 'http://localhost/api/misdatos';
 
 let numberTasks = 0;
@@ -34,12 +35,12 @@ function printList(arr) {
 }
 
 function updateMsg(txt, number) {
-    if ((txt === noTaskMsg) ||(txt === noTaskInputMsg)) {
+    if ((txt === noTaskMsg) || (txt === noTaskInputMsg)) {
         infoText.classList.add('emptyMsg');
         infoText.innerHTML = txt;
     } else {
         infoText.classList.remove('emptyMsg');
-        infoText.innerHTML = txt + `Tienes ${number} tareas pendientes`;
+        infoText.innerHTML = txt + `Tienes <strong>${number}</strong> tareas`;
     }
 }
 
@@ -69,7 +70,7 @@ function createListElements({ _id, task, checked }) {
 
     const newCheckbox = createTag('input', null, null, 'checkbox');
     const newText = createTag('p', task);
-    const newDelBtn = createTag('button', '-');
+    const newDelBtn = createTag('button', '-', 'delete__btn');
 
     isCheked(newItem, newCheckbox, checked);
     
@@ -207,6 +208,43 @@ function deleteOnDatabase(id) {
         });
 }
 
+function deleteManyDatabase() {
+
+    // request options
+    const options = {
+        method: 'DELETE',
+        body: JSON.stringify(),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    // send DELETE request   
+    return fetch('http://localhost/api/misdatos/delete', options)
+        .then(res => {
+            console.log(`DELETEMANY result: ${res.ok}`)
+        });
+}
+
+function deleteDoneTask () {
+    const listItem = document.querySelectorAll('li');
+    for (const item of listItem) {
+        const checkBox = item.firstChild;
+        if (checkBox.checked === true) {
+            item.remove();
+            numberTasks --;
+            if (numberTasks === 0) {
+                updateMsg(noTaskMsg);
+            }
+            else {
+                updateMsg(taskMsg, numberTasks);
+            }
+        }
+    }
+    console.log(listItem);
+    deleteManyDatabase();
+}
+
 function changeTxt () {
     const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg):null;   
     return isEmpty; 
@@ -221,4 +259,5 @@ function pressEnter(event) {
 
 btn.addEventListener('click', createTask);
 document.addEventListener('keyup', pressEnter);
+deleteManyBtn.addEventListener('click', deleteDoneTask);
 

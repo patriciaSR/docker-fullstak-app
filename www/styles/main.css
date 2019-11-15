@@ -1,37 +1,120 @@
-body{color: blue;}
-
-.task-done {
-    background-color: green;
+body {
+    color: #4c77fb;;
 }
 
+header {
+    text-align:center;
+    margin-top:30px;
+}
+
+.task-done {
+    background-color: rgba(144, 238, 144, 0.589);        
+}
+.task-done > p {
+    text-decoration: line-through;
+}
 .emptyMsg {
     color:red;
 }
 
-.list{
+.list {
     margin:0;
     padding:0;
     width:500px;
-    background-color:pink;
 }
 
-.list__item{
+.list__item {
     margin-top:10px;
     display:flex;
     justify-content: space-between;
-    /* align-items: center; */
     width:100%;    
 }
 
 .list__item > p {
     margin :0 10px;
-    flex-grow:1;
+    flex-grow: 1;
 }
 
-.list__item > button {
-  
+
+.app__main {
+    background-color: #F5F5F5;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    margin:0 auto;   
 }
 
-.main__create{
+.main__create {
     margin-bottom: 30px;
+    width: 500px;
+    display: flex;    
 }
+
+.create__field{
+    flex-grow: 1;
+    padding-left: 10px;
+    border-radius: 8px;
+    border: 1px solid #4c77fb;
+    background-color: white;
+    color:#2a448f;
+}
+
+.create__field::placeholder {
+    color:lightgrey;
+}
+
+.list__info{
+    font-size: 18px;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #4c77fb;
+}
+
+
+/* botones */
+.create__btn {
+    border-radius: 8px;
+    border: none;
+    width: 50px;
+    height: 50px;
+    line-height: 0;
+    color: white;
+    font-size: 30px;
+    background-color: #4c77fb;
+    margin-left: 20px;
+}
+
+.create__btn:hover {
+    background: #2a448f;
+    transform: scale(.95);
+}
+
+.delete__btn {
+    color: white;
+    border:none;
+    border-radius: 4px;
+    line-height: 0;
+    width:20px;
+    height: 20px;
+    font-weight: 500;
+    font-size: 24px;
+    background-color:  #7b8fca;
+}
+
+.delete__btn:hover ,.deletemany:hover {
+    background: #2a448f;
+    transform: scale(.95);
+}
+
+.deletemany {
+    border-radius: 50%;
+    border: none;
+    width: 50px;
+    height: 50px;
+    line-height: 0;
+    color: white;
+    font-size: 16px;
+    background-color: lightgray;
+    margin-left: 20px;
+}
+

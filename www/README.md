@@ -21,5 +21,36 @@ docker-compose logs app
 
 
 para borrar dentro de mongo elementos de la base de datos:
-
+db.micoleccion.find({})
 db.micoleccion.deleteOne({objeto})
+
+
+## CADA VEZ QUE MODIFIQUEMOS EL INDEX.JS DE APP (NUESTRO BACK):
+
+colocados sobre la carpeta api:
+
+docker-compose down
+docker-compose build
+docker-compose up -d
+
+
+con la aplicación MongoDB Compass --> puedes visualizar bases de datos.
+
+
+## Correcciones: 
+-la funcion isChecked debiera estar declarada antes de llamarla.
+-Se podría optimizar el código de las diferentes llamadas porque prácticamente cambia solo el objeto del json.
+-en los if, la primera condición debiera ser la que se va a ser la más común que suceda.
+-en la parte _back_ los delete se pueden concentrar en uno solo con el mismo endpoint y poniendo dentro un condicional:
+    -si viene con id entras aquí
+    -si no viene con id entras en este otro lado.
+
+## Para pubicar:
+HEROKU _ servidor gratuito de node.js  Lo que tu subes ahí te da una url. 
+
+Subes tu base de datos a heroku y tu index.js a heroku y estás en producción.
+
+Con githubpages lo puedes subir (html css js etc) y haces las llamadas a la api que subes a heroku
+
+con FIREBASE podrías pero sólamente tendrías la base de datos. Te provee una api para llamar a los endpoints. 
+
