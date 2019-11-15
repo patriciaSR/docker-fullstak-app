@@ -65,10 +65,11 @@ header {
 
 .list__info{
     font-size: 18px;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #4c77fb;
 }
-/* .list__info > span {
-    font-weight: 700;
-} */
+
 
 /* botones */
 .create__btn {
@@ -100,7 +101,20 @@ header {
     background-color:  #7b8fca;
 }
 
-.delete__btn:hover {
+.delete__btn:hover ,.deletemany:hover {
     background: #2a448f;
     transform: scale(.95);
 }
+
+.deletemany {
+    border-radius: 50%;
+    border: none;
+    width: 50px;
+    height: 50px;
+    line-height: 0;
+    color: white;
+    font-size: 16px;
+    background-color: lightgray;
+    margin-left: 20px;
+}
+
