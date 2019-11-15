@@ -35,7 +35,7 @@ function printList(arr) {
 }
 
 function updateMsg(txt, number) {
-    if ((txt === noTaskMsg) ||(txt === noTaskInputMsg)) {
+    if ((txt === noTaskMsg) || (txt === noTaskInputMsg)) {
         infoText.classList.add('emptyMsg');
         infoText.innerHTML = txt;
     } else {
@@ -232,6 +232,13 @@ function deleteDoneTask () {
         const checkBox = item.firstChild;
         if (checkBox.checked === true) {
             item.remove();
+            numberTasks --;
+            if (numberTasks === 0) {
+                updateMsg(noTaskMsg);
+            }
+            else {
+                updateMsg(taskMsg, numberTasks);
+            }
         }
     }
     console.log(listItem);
