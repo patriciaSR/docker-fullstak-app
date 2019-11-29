@@ -13,9 +13,6 @@ function isChecked(liItem, checkBox, status) {
         checkBox.checked = true;
         liItem.classList.add('task-done');
     }
-    else {
-        liItem.classList.remove('task-done');
-    }
 };
 
 function createTag(tag = 'div', text = '', newClass, newType) {

@@ -54,4 +54,36 @@ describe('test list construction', () => {
       expect(result).toBe(mother);
     });
   });
+
+  describe('isChecked method', () => {
+    test('it adds task-done class when status db is true', () => {
+      document.body.innerHTML = `
+        <li>
+          <input type="checkbox" />
+        </li>
+      `;
+      const status= true;
+      const liItem = document.querySelector('li');
+      const checkBox = document.querySelector('input');
+
+      isChecked(liItem, checkBox, status );
+
+      expect(liItem.classList).toContain('task-done');
+    });
+
+    test('it doesnt add task-done class when status db is false', () => {
+      document.body.innerHTML = `
+        <li>
+          <input type="checkbox" />
+        </li>
+      `;
+      const status= false;
+      const liItem = document.querySelector('li');
+      const checkBox = document.querySelector('input');
+
+      isChecked(liItem, checkBox, status );
+
+      expect(liItem.classList).not.toContain('task-done');
+    });
+  })
 });
