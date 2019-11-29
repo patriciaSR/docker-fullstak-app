@@ -1,4 +1,6 @@
 import { adoptChilds, isChecked, createTag, createTaskItem } from '../js/construct.js';
+import { mockTasks } from './fixtures/mockTasks.js';
+import * as constructModule from '../js/construct.js';
 
 describe('test list construction', () => {
   describe('createTag method', () => {
@@ -86,4 +88,40 @@ describe('test list construction', () => {
       expect(liItem.classList).not.toContain('task-done');
     });
   })
+
+  describe('createTaskItem method', () => {
+    test('it returns a new <li> element', () => {
+      const taskObj = mockTasks[0];
+      const text = `<p>${taskObj.task}</p>`
+
+      // const spyDeleteTask = jest.spyOn(constructModule, 'deleteTask');
+
+      const result = createTaskItem(taskObj);
+
+
+      expect(result.tagName).toBe('LI');
+      expect(result.id).toBe(taskObj._id);
+      expect(result.firstChild.checked).toBe(true);
+      expect(result.innerHTML).toMatch(text);
+    });
+  });
 });
+
+// function createTaskItem(taskObj) {
+//   const { _id, task, checked } = taskObj;
+  
+//   const newItem = document.createElement('li');
+//   const newCheckbox = createTag('input', null, null, 'checkbox');
+//   const newText = createTag('p', task);
+//   const newDelBtn = createTag('button', '-', 'delete__btn');
+
+//   newItem.classList.add('list__item')
+//   newItem.id = _id;
+//   newDelBtn.addEventListener('click', deleteTask);
+//   newCheckbox.addEventListener('click', updateStatus);
+
+//   isChecked(newItem, newCheckbox, checked);
+//   adoptChilds(newItem, newCheckbox, newText, newDelBtn);
+
+//   return newItem;
+// }

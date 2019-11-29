@@ -2,7 +2,7 @@ const mockTasks = [
   {
     "_id": "1a",
     "task": "hacer los deberes",
-    "checked": false
+    "checked": true
   },
   {
     "_id": "2b",
