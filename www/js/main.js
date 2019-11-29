@@ -25,22 +25,20 @@ fetch(ENDPOINT)
 //
 function printList(arr) {
     if (arr.length === 0) { 
-        updateMsg(noTaskMsg);
+        updateMsg(noTaskMsg, infoText);
 
-    } else {
-        for (const item of arr) {
-            createListElements(item);
-        };
+    } else {       
+        arr.forEach(item => createListElements(item));
     }
 }
 
-function updateMsg(txt, number) {
+function updateMsg(txt, infoContainer, number = 0) {
     if ((txt === noTaskMsg) || (txt === noTaskInputMsg)) {
-        infoText.classList.add('emptyMsg');
-        infoText.innerHTML = txt;
+        infoContainer.classList.add('emptyMsg');
+        infoContainer.innerHTML = txt;
     } else {
-        infoText.classList.remove('emptyMsg');
-        infoText.innerHTML = txt + `Tienes <strong>${number}</strong> tareas`;
+        infoContainer.classList.remove('emptyMsg');
+        infoContainer.innerHTML =`${txt} Tienes <strong>${number}</strong> tareas`;
     }
 }
 
@@ -81,7 +79,7 @@ function createListElements({ _id, task, checked }) {
     newCheckbox.addEventListener('click', updateStatus);
     numberTasks ++;
 
-    updateMsg(taskMsg, numberTasks);
+    updateMsg(taskMsg, infoText, numberTasks);
 }
 
 //interaction functions
@@ -98,7 +96,7 @@ function isCheked(liItem, checkBox, status) {
 function createTask() {
     const inputVal = input.value;
     if (input.value === '') {
-        updateMsg(noTaskInputMsg);
+        updateMsg(noTaskInputMsg,infoText);
     } else {
         postOnDataBase(inputVal).then((data) => {
             createListElements(data);
@@ -136,9 +134,9 @@ function deleteTask(event) {
     numberTasks --;
     
     if (numberTasks !== 0) {
-        updateMsg(taskMsg, numberTasks);
+        updateMsg(taskMsg, infoText, numberTasks);
     }else {
-        updateMsg(noTaskMsg);
+        updateMsg(noTaskMsg, infoText);
     }
 }
 
@@ -234,10 +232,10 @@ function deleteDoneTask () {
             item.remove();
             numberTasks --;
             if (numberTasks === 0) {
-                updateMsg(noTaskMsg);
+                updateMsg(noTaskMsg, infoText);
             }
             else {
-                updateMsg(taskMsg, numberTasks);
+                updateMsg(taskMsg, infoText, numberTasks);
             }
         }
     }
@@ -246,7 +244,7 @@ function deleteDoneTask () {
 }
 
 function changeTxt () {
-    const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg):null;   
+    const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg, infoText):null;   
     return isEmpty; 
 }
 
