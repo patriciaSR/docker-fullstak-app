@@ -1,5 +1,5 @@
 
-import {deleteTask, updateStatus } from './main.js';
+import { deleteTask, updateStatus } from './paint.js';
 
 function adoptChilds(mother, ...rest) {
     if (rest) {
@@ -18,16 +18,18 @@ function isChecked(liItem, checkBox, status) {
     }
 };
 
-function createTag(tag, text, newClass, newType) {
-    const newElement = document.createElement(tag);
-    const newText = document.createTextNode(text);
-
-    newClass ? newElement.classList.add(newClass) : null;
-    newType ? (newElement.type = newType) : null;
-
-    newElement.appendChild(newText);
-
-    return newElement;
+function createTag(tag = 'div', text = '', newClass, newType) {
+    if(tag) {
+        const newElement = document.createElement(tag);
+        const newText = document.createTextNode(text);
+    
+        newClass ? newElement.classList.add(newClass) : null;
+        newType ? (newElement.type = newType) : null;
+    
+        newElement.appendChild(newText);
+    
+        return newElement;
+    } 
 }
 
 function createTaskItem(taskObj) {
