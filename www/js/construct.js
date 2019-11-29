@@ -3,8 +3,8 @@ import { deleteTask, updateStatus } from './paint.js';
 
 function adoptChilds(mother, ...rest) {
     if (rest) {
-        const newMother = rest.map(node => mother.appendChild(node));
-        return newMother;
+        rest.forEach(node => mother.appendChild(node));
+        return mother;
     }
 }
 

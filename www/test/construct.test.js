@@ -25,4 +25,33 @@ describe('test list construction', () => {
       expect(newElement.tagName).toBe('DIV');
     });
   });
+
+  describe('adoptChilds method', () => {
+    test('it appends any element given to a node', () => {
+      document.body.innerHTML = `
+        <div class="mother"></div>
+      `;
+      const node1 = document.createElement('p');
+      const node2 = document.createElement('span');
+      const node3 = document.createElement('a');
+      const mother = document.querySelector('.mother');
+
+      const result = adoptChilds(mother, node1, node2, node3);
+
+      expect(result.firstChild.tagName).toBe('P');
+      expect(result.lastChild.tagName).toBe('A');
+    });
+
+    test('it ruturns mother without any child if not childs arguments', () => {
+      document.body.innerHTML = `
+        <div class="mother"></div>
+      `;
+      const mother = document.querySelector('.mother');
+
+      const result = adoptChilds(mother);
+
+      expect(result.firstChild).toBe(null);
+      expect(result).toBe(mother);
+    });
+  });
 });
