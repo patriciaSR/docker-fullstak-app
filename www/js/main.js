@@ -2,7 +2,6 @@
 
 const input = document.querySelector('.create__field');
 const btn = document.querySelector('.create__btn');
-const list = document.querySelector('.list');
 const listSection = document.querySelector('.main__list');
 const infoText = document.querySelector('.list__info');
 const deleteManyBtn = document.querySelector('.deletemany');
@@ -24,10 +23,10 @@ fetch(ENDPOINT)
 
 //
 function printList(arr) {
-    if (arr.length === 0) { 
+    if (arr.length === 0) {
         updateMsg(noTaskMsg, infoText);
 
-    } else {       
+    } else {
         arr.forEach(item => createListElements(item));
     }
 }
@@ -38,46 +37,55 @@ function updateMsg(txt, infoContainer, number = 0) {
         infoContainer.innerHTML = txt;
     } else {
         infoContainer.classList.remove('emptyMsg');
-        infoContainer.innerHTML =`${txt} Tienes <strong>${number}</strong> tareas`;
+        infoContainer.innerHTML = `${txt} Tienes <strong>${number}</strong> tareas`;
     }
 }
 
 function createTag(tag, text, newClass, newType) {
     const newElement = document.createElement(tag);
     const newText = document.createTextNode(text);
-    
-    newClass ? newElement.classList.add(newClass): null;
+
+    newClass ? newElement.classList.add(newClass) : null;
     newType ? (newElement.type = newType) : null;
-    
+
     newElement.appendChild(newText);
 
     return newElement;
 }
 
-function createNodeAdopt(mother, ...rest) {
-    const newMother = rest.map(node => mother.appendChild(node));
-    
-    return newMother;
+function adoptChilds(mother, ...rest) {
+    if (rest) {
+        const newMother = rest.map(node => mother.appendChild(node));
+        return newMother;
+    }
 }
 
-function createListElements({ _id, task, checked }) {
-
+function createElement(taskObj) {
+    const { _id, task, checked } = taskObj;
+    
     const newItem = document.createElement('li');
-    newItem.classList.add('list__item')
-    newItem.id = _id;
-
     const newCheckbox = createTag('input', null, null, 'checkbox');
     const newText = createTag('p', task);
     const newDelBtn = createTag('button', '-', 'delete__btn');
 
-    isCheked(newItem, newCheckbox, checked);
-    
-    createNodeAdopt(newItem, newCheckbox, newText, newDelBtn);
-    list.appendChild(newItem);
-    
+    newItem.classList.add('list__item')
+    newItem.id = _id;
     newDelBtn.addEventListener('click', deleteTask);
     newCheckbox.addEventListener('click', updateStatus);
-    numberTasks ++;
+    
+    isCheked(newItem, newCheckbox, checked);
+    adoptChilds(newItem, newCheckbox, newText, newDelBtn);
+
+    return newItem;
+}
+
+function createListElements(taskObj) {
+    const newItem = createElement(taskObj);
+    const list = document.querySelector('.list');    
+    
+    list.appendChild(newItem);
+    
+    numberTasks++;
 
     updateMsg(taskMsg, infoText, numberTasks);
 }
@@ -96,10 +104,10 @@ function isCheked(liItem, checkBox, status) {
 function createTask() {
     const inputVal = input.value;
     if (input.value === '') {
-        updateMsg(noTaskInputMsg,infoText);
+        updateMsg(noTaskInputMsg, infoText);
     } else {
-        postOnDataBase(inputVal).then((data) => {
-            createListElements(data);
+        postOnDataBase(inputVal).then((task) => {
+            createListElements(task);
         });
     };
 
@@ -128,14 +136,14 @@ function deleteTask(event) {
     const id = liItem.id;
     deleteOnDatabase(id)
         .then(() => {
-            liItem.remove();                
+            liItem.remove();
         });
-    
-    numberTasks --;
-    
+
+    numberTasks--;
+
     if (numberTasks !== 0) {
         updateMsg(taskMsg, infoText, numberTasks);
-    }else {
+    } else {
         updateMsg(noTaskMsg, infoText);
     }
 }
@@ -158,7 +166,7 @@ function postOnDataBase(newTask) {
 
     // send POST request   
     return fetch(ENDPOINT, options)
-        .then(res => {            
+        .then(res => {
             return res.json();
         });
 }
@@ -224,13 +232,13 @@ function deleteManyDatabase() {
         });
 }
 
-function deleteDoneTask () {
+function deleteDoneTask() {
     const listItem = document.querySelectorAll('li');
     for (const item of listItem) {
         const checkBox = item.firstChild;
         if (checkBox.checked === true) {
             item.remove();
-            numberTasks --;
+            numberTasks--;
             if (numberTasks === 0) {
                 updateMsg(noTaskMsg, infoText);
             }
@@ -241,11 +249,6 @@ function deleteDoneTask () {
     }
     console.log(listItem);
     deleteManyDatabase();
-}
-
-function changeTxt () {
-    const isEmpty = (list.innerHTML === '') ? updateMsg(noTaskMsg, infoText):null;   
-    return isEmpty; 
 }
 
 
