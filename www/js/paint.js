@@ -26,7 +26,7 @@ function addTaskToList(taskObj) {
   list.appendChild(newItem);
   numberTasks++;
   
-  updateMsg('', infoText, numberTasks);
+  updateMsg(null, infoText, numberTasks);
 }
 
 function printList(arr) {
@@ -84,7 +84,7 @@ function deleteTask(event) {
   numberTasks--;
 
   if (numberTasks !== 0) {
-    updateMsg('else', infoText, numberTasks);
+    updateMsg(null, infoText, numberTasks);
   } else {
     updateMsg(noTaskMsg, infoText);
   }
@@ -102,7 +102,7 @@ function deleteDoneTask() {
         updateMsg(noTaskMsg, infoText);
       }
       else {
-        updateMsg('else', infoText, numberTasks);
+        updateMsg(null, infoText, numberTasks);
       }
     }
   }
