@@ -29,7 +29,7 @@ function addTaskToList(taskObj = {}) {
   updateMsg(null, infoText, numberTasks);
 }
 
-function printList(arr) {
+function printList(arr = []) {
   if (arr.length > 0) {
     arr.forEach(item => addTaskToList(item));    
   } else {

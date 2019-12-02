@@ -13,7 +13,6 @@ describe('updateMsg method', () => {
 
         const inputText = 'No tienes tareas';
 
-
         updateMsg(inputText, node1, 1);
 
         expect(node1.innerHTML).toEqual(inputText);
@@ -24,7 +23,6 @@ describe('updateMsg method', () => {
       `;
         const node1 = document.querySelector('div');
         const inputText = 'Por favor, introduce una tarea';
-
 
         updateMsg(inputText, node1, 1);
 
@@ -39,7 +37,6 @@ describe('updateMsg method', () => {
         const inputText = '';
         const output = `Aquí están tus tareas: Tienes <strong>4</strong> tareas`
 
-
         updateMsg(inputText, node1, 4);
 
         expect(node1.innerHTML).toEqual(output);
@@ -53,7 +50,6 @@ describe('updateMsg method', () => {
         const inputText = null;
         const output = `Aquí están tus tareas: Tienes <strong>0</strong> tareas`
 
-
         updateMsg(inputText, node1);
 
         expect(node1.innerHTML).toEqual(output);
@@ -66,7 +62,6 @@ describe('updateMsg method', () => {
         const inputText = undefined;
         const output = `Aquí están tus tareas: Tienes <strong>0</strong> tareas`
 
-
         updateMsg(inputText, node1);
 
         expect(node1.innerHTML).toEqual(output);
@@ -74,27 +69,9 @@ describe('updateMsg method', () => {
 
 });
 
-
-describe('addTaskToList method', () => {
-    const spyUpdateMsg = jest.spyOn(paintModule, 'updateMsg');
-    test('appends a new li element', () => {
-        let numberTasks = 8;
-        document.body.innerHTML = `
-        <ul class="list"></ul>
-      `;
-
-        addTaskToList(mockTasks[0]);
-        const mockedList = document.querySelector('ul');
-
-        expect(mockedList.firstChild.tagName).toBe('LI');
-        expect(spyUpdateMsg).toHaveBeenCalled();
-    });
-});
-
 describe('addTaskToList method', () => {
     const spyUpdateMsg = jest.spyOn(paintModule, 'updateMsg');
     test('appends a new li element and calls updateMsg', () => {
-        let numberTasks = 8;
         document.body.innerHTML = `
         <ul class="list"></ul>
       `;
@@ -108,18 +85,34 @@ describe('addTaskToList method', () => {
 });
 
 describe('printList method', () => {
-    //const spyUpdateMsg = jest.spyOn(paintModule, 'updateMsg');
-    test('calls addTaskToList', () => {
-        let numberTasks = 8;
+    const spyAddTaskToList = jest.spyOn(paintModule, 'addTaskToList');
+    const spyUpdateMsg = jest.spyOn(paintModule, 'updateMsg');
+
+    test('calls addTaskToList with an object', () => {
         document.body.innerHTML = `
         <ul class="list"></ul>
       `;
 
-        addTaskToList(mockTasks[0]);
+        printList(mockTasks);
         const mockedList = document.querySelector('ul');
+        const newItems = document.querySelectorAll('li');
 
         expect(mockedList.firstChild.tagName).toBe('LI');
-        expect(spyUpdateMsg).toHaveBeenCalled();
+        expect(newItems.length).toEqual(3);
+        expect(spyAddTaskToList).toHaveBeenCalled();
     });
-});
+    
+    test('calls updateMsg when arr is empty', () => {
+      document.body.innerHTML = `
+      <ul class="list"></ul>
+    `;
 
+      printList();
+      const mockedList = document.querySelector('ul');
+
+      expect(mockedList.innerHTML.length).toBe(0);
+      expect(spyUpdateMsg).toHaveBeenCalled();
+  });
+
+
+});
