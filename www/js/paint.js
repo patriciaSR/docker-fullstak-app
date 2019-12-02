@@ -4,36 +4,35 @@ import { deleteManyDatabase, deleteOnDatabase, patchOnDatabase, postOnDataBase }
 let numberTasks = 0;
 
 const noTaskMsg = 'No tienes tareas';
-const taskMsg = `Aquí están tus tareas: `;
 const noTaskInputMsg = 'Por favor, introduce una tarea';
 
 const infoText = document.querySelector('.list__info');
 
-function updateMsg(txt, infoContainer, number = 0) {
+function updateMsg(txt, infoContainer, number=0) {
   if (infoContainer) {
-    if ((txt === noTaskMsg) || (txt === noTaskInputMsg)) {
+    if ((txt === 'No tienes tareas') || (txt === 'Por favor, introduce una tarea')) {
       infoContainer.classList.add('emptyMsg');
       infoContainer.innerHTML = txt;
     } else {
       infoContainer.classList.remove('emptyMsg');
-      infoContainer.innerHTML = `${txt} Tienes <strong>${number}</strong> tareas`;
+      infoContainer.innerHTML = `Aquí están tus tareas: Tienes <strong>${number}</strong> tareas`;
     }
   }
 }
 
-function addTaskToList(taskObj, numberTasks = 0) {
+function addTaskToList(taskObj) {
   const newItem = createTaskItem(taskObj);
   const list = document.querySelector('.list');
-
   list.appendChild(newItem);
   numberTasks++;
-
-  updateMsg(taskMsg, infoText, numberTasks);
+  
+  updateMsg('', infoText, numberTasks);
 }
 
 function printList(arr) {
   if (arr.length > 0) {
-    arr.forEach(item => addTaskToList(item, numberTasks));
+    arr.forEach(item => addTaskToList(item));
+    //numberTasks = arr.length;
   } else {
     updateMsg(noTaskMsg, infoText);
   }
@@ -46,7 +45,7 @@ function createTask() {
     updateMsg(noTaskInputMsg, infoText);
   } else {
     postOnDataBase(inputVal).then((task) => {
-      addTaskToList(task, numberTasks);
+      addTaskToList(task);  
     });
   };
   input.value = '';
@@ -85,7 +84,7 @@ function deleteTask(event) {
   numberTasks--;
 
   if (numberTasks !== 0) {
-    updateMsg(taskMsg, infoText, numberTasks);
+    updateMsg('else', infoText, numberTasks);
   } else {
     updateMsg(noTaskMsg, infoText);
   }
@@ -103,7 +102,7 @@ function deleteDoneTask() {
         updateMsg(noTaskMsg, infoText);
       }
       else {
-        updateMsg(taskMsg, infoText, numberTasks);
+        updateMsg('else', infoText, numberTasks);
       }
     }
   }
