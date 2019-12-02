@@ -8,7 +8,7 @@ const noTaskInputMsg = 'Por favor, introduce una tarea';
 
 const infoText = document.querySelector('.list__info');
 
-function updateMsg(txt, infoContainer, number=0) {
+function updateMsg(txt, infoContainer, number = 0) {
   if (infoContainer) {
     if ((txt === 'No tienes tareas') || (txt === 'Por favor, introduce una tarea')) {
       infoContainer.classList.add('emptyMsg');
@@ -25,13 +25,13 @@ function addTaskToList(taskObj = {}) {
   const list = document.querySelector('.list');
   list.appendChild(newItem);
   numberTasks++;
-  
+
   updateMsg(null, infoText, numberTasks);
 }
 
 function printList(arr = []) {
   if (arr.length > 0) {
-    arr.forEach(item => addTaskToList(item));    
+    arr.forEach(item => addTaskToList(item));
   } else {
     updateMsg(noTaskMsg, infoText);
   }
@@ -40,12 +40,12 @@ function printList(arr = []) {
 function createTask() {
   const input = document.querySelector('.create__field');
   const inputVal = input.value;
-  if (input.value === '') {
-    updateMsg(noTaskInputMsg, infoText);
-  } else {
+  if (input.value) {
     postOnDataBase(inputVal).then((task) => {
-      addTaskToList(task);  
+      addTaskToList(task);
     });
+  } else {
+    updateMsg(noTaskInputMsg, infoText);
   };
   input.value = '';
 }

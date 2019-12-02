@@ -2,6 +2,8 @@ import { printList, updateMsg, addTaskToList, createTask, pressEnter, updateStat
 //import { createTaskItem } from './construct.js';
 import * as constructModule from '../js/construct.js';
 import * as paintModule from '../js/paint.js';
+import * as serviceModule from '../js/service.js';
+
 import { mockTasks } from './fixtures/mockTasks.js';
 
 describe('updateMsg method', () => {
@@ -113,6 +115,30 @@ describe('printList method', () => {
       expect(mockedList.innerHTML.length).toBe(0);
       expect(spyUpdateMsg).toHaveBeenCalled();
   });
+});
 
+describe('createTask method', () => {
+  const spyPost = jest.spyOn(serviceModule, 'postOnDataBase');
+  const spyUpdateMsg = jest.spyOn(paintModule, 'updateMsg');
 
+  test('calls updateMessage if input is empty', () => {
+    document.body.innerHTML = `
+    <input value="" class="create__field" />
+  `;
+    createTask();
+
+    expect(spyUpdateMsg).toHaveBeenCalled();
+    expect(spyPost).not.toHaveBeenCalled();
+
+});
+
+  test('calls postOnDataBase', () => {
+      document.body.innerHTML = `
+      <input value="hola" class="create__field" />
+    `;
+
+      createTask();
+
+      expect(spyPost).toHaveBeenCalledWith('hola');
+  });
 });
