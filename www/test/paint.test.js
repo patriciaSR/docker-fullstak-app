@@ -1,13 +1,15 @@
 import { printList, updateMsg, addTaskToList, createTask, pressEnter, updateStatus, deleteTask, deleteDoneTask } from '../js/paint.js';
 //import { createTaskItem } from './construct.js';
 import * as constructModule from '../js/construct.js';
+import * as paintModule from '../js/paint.js';
+import { mockTasks } from './fixtures/mockTasks.js';
 
-describe('adoptChilds method', () => {
+describe('updateMsg method', () => {
     document.body.innerHTML = `
     <div class="mother"></div>
   `;
     const node1 = document.querySelector('div');
-    test('it appends noTaskMsg to mother element', () => {
+    test('it appends -No tienes tareas- to mother element', () => {
 
         const inputText = 'No tienes tareas';
 
@@ -16,7 +18,7 @@ describe('adoptChilds method', () => {
 
         expect(node1.innerHTML).toEqual(inputText);
     });
-    test('it appends noTaskMsg to mother element', () => {
+    test('it appends -Por favor, introduce una tarea- to mother element', () => {
         document.body.innerHTML = `
         <div class="mother"></div>
       `;
@@ -29,7 +31,7 @@ describe('adoptChilds method', () => {
         expect(node1.innerHTML).toEqual(inputText);
         expect(node1.classList).toContain('emptyMsg');
     });
-    test('it appends noTaskMsg to mother element', () => {
+    test('it appends -Aquí están tus tar...- to mother element', () => {
         document.body.innerHTML = `
         <div class="mother"></div>
       `;
@@ -43,7 +45,7 @@ describe('adoptChilds method', () => {
         expect(node1.innerHTML).toEqual(output);
         expect(node1.classList).not.toContain('emptyMsg');
     });
-    test('it appends noTaskMsg to mother element', () => {
+    test('it appends with null parameter to mother element', () => {
         document.body.innerHTML = `
         <div class="mother"></div>
       `;
@@ -56,7 +58,7 @@ describe('adoptChilds method', () => {
 
         expect(node1.innerHTML).toEqual(output);
     });
-    test('it appends noTaskMsg to mother element', () => {
+    test('it appends with undefined parameter to mother element', () => {
         document.body.innerHTML = `
         <div class="mother"></div>
       `;
@@ -72,19 +74,52 @@ describe('adoptChilds method', () => {
 
 });
 
-// const noTaskMsg = 'No tienes tareas';
-// const noTaskInputMsg = 'Por favor, introduce una tarea';
 
-// const infoText = document.querySelector('.list__info');
+describe('addTaskToList method', () => {
+    const spyUpdateMsg = jest.spyOn(paintModule, 'updateMsg');
+    test('appends a new li element', () => {
+        let numberTasks = 8;
+        document.body.innerHTML = `
+        <ul class="list"></ul>
+      `;
 
-// function updateMsg(txt, infoContainer, number=0) {
-//   if (infoContainer) {
-//     if ((txt === 'No tienes tareas') || (txt === 'Por favor, introduce una tarea')) {
-//       infoContainer.classList.add('emptyMsg');
-//       infoContainer.innerHTML = txt;
-//     } else {
-//       infoContainer.classList.remove('emptyMsg');
-//       infoContainer.innerHTML = `Aquí están tus tareas: Tienes <strong>${number}</strong> tareas`;
-//     }
-//   }
-// }
+        addTaskToList(mockTasks[0]);
+        const mockedList = document.querySelector('ul');
+
+        expect(mockedList.firstChild.tagName).toBe('LI');
+        expect(spyUpdateMsg).toHaveBeenCalled();
+    });
+});
+
+describe('addTaskToList method', () => {
+    const spyUpdateMsg = jest.spyOn(paintModule, 'updateMsg');
+    test('appends a new li element and calls updateMsg', () => {
+        let numberTasks = 8;
+        document.body.innerHTML = `
+        <ul class="list"></ul>
+      `;
+
+        addTaskToList(mockTasks[0]);
+        const mockedList = document.querySelector('ul');
+
+        expect(mockedList.firstChild.tagName).toBe('LI');
+        expect(spyUpdateMsg).toHaveBeenCalled();
+    });
+});
+
+describe('printList method', () => {
+    //const spyUpdateMsg = jest.spyOn(paintModule, 'updateMsg');
+    test('calls addTaskToList', () => {
+        let numberTasks = 8;
+        document.body.innerHTML = `
+        <ul class="list"></ul>
+      `;
+
+        addTaskToList(mockTasks[0]);
+        const mockedList = document.querySelector('ul');
+
+        expect(mockedList.firstChild.tagName).toBe('LI');
+        expect(spyUpdateMsg).toHaveBeenCalled();
+    });
+});
+

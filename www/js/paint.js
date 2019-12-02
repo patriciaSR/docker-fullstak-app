@@ -20,7 +20,7 @@ function updateMsg(txt, infoContainer, number=0) {
   }
 }
 
-function addTaskToList(taskObj) {
+function addTaskToList(taskObj = {}) {
   const newItem = createTaskItem(taskObj);
   const list = document.querySelector('.list');
   list.appendChild(newItem);
@@ -31,8 +31,7 @@ function addTaskToList(taskObj) {
 
 function printList(arr) {
   if (arr.length > 0) {
-    arr.forEach(item => addTaskToList(item));
-    //numberTasks = arr.length;
+    arr.forEach(item => addTaskToList(item));    
   } else {
     updateMsg(noTaskMsg, infoText);
   }
