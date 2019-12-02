@@ -10,20 +10,22 @@ const noTaskInputMsg = 'Por favor, introduce una tarea';
 const infoText = document.querySelector('.list__info');
 
 function updateMsg(txt, infoContainer, number = 0) {
-  if ((txt === noTaskMsg) || (txt === noTaskInputMsg)) {
+  if (infoContainer) {
+    if ((txt === noTaskMsg) || (txt === noTaskInputMsg)) {
       infoContainer.classList.add('emptyMsg');
       infoContainer.innerHTML = txt;
-  } else {
+    } else {
       infoContainer.classList.remove('emptyMsg');
       infoContainer.innerHTML = `${txt} Tienes <strong>${number}</strong> tareas`;
+    }
   }
 }
 
 function addTaskToList(taskObj, numberTasks = 0) {
   const newItem = createTaskItem(taskObj);
-  const list = document.querySelector('.list');    
-  
-  list.appendChild(newItem);    
+  const list = document.querySelector('.list');
+
+  list.appendChild(newItem);
   numberTasks++;
 
   updateMsg(taskMsg, infoText, numberTasks);
@@ -41,18 +43,18 @@ function createTask() {
   const input = document.querySelector('.create__field');
   const inputVal = input.value;
   if (input.value === '') {
-      updateMsg(noTaskInputMsg, infoText);
+    updateMsg(noTaskInputMsg, infoText);
   } else {
-      postOnDataBase(inputVal).then((task) => {
-          addTaskToList(task, numberTasks);
-      });
+    postOnDataBase(inputVal).then((task) => {
+      addTaskToList(task, numberTasks);
+    });
   };
   input.value = '';
 }
 
 function pressEnter(event) {
   if (event.key === 'Enter') {
-      createTask();
+    createTask();
   }
 }
 
@@ -63,9 +65,9 @@ function updateStatus(event) {
   const status = currentBox.checked;
 
   if (status) {
-      liItem.classList.add('task-done');
+    liItem.classList.add('task-done');
   } else {
-      liItem.classList.remove('task-done');
+    liItem.classList.remove('task-done');
   }
 
   patchOnDatabase(itemId, status);
@@ -76,16 +78,16 @@ function deleteTask(event) {
   const liItem = currentBtn.parentElement;
   const id = liItem.id;
   deleteOnDatabase(id)
-      .then(() => {
-          liItem.remove();
-      });
+    .then(() => {
+      liItem.remove();
+    });
 
   numberTasks--;
 
   if (numberTasks !== 0) {
-      updateMsg(taskMsg, infoText, numberTasks);
+    updateMsg(taskMsg, infoText, numberTasks);
   } else {
-      updateMsg(noTaskMsg, infoText);
+    updateMsg(noTaskMsg, infoText);
   }
 }
 
@@ -93,19 +95,18 @@ function deleteTask(event) {
 function deleteDoneTask() {
   const listItem = document.querySelectorAll('li');
   for (const item of listItem) {
-      const checkBox = item.firstChild;
-      if (checkBox.checked === true) {
-          item.remove();
-          numberTasks--;
-          if (numberTasks === 0) {
-              updateMsg(noTaskMsg, infoText);
-          }
-          else {
-              updateMsg(taskMsg, infoText, numberTasks);
-          }
+    const checkBox = item.firstChild;
+    if (checkBox.checked === true) {
+      item.remove();
+      numberTasks--;
+      if (numberTasks === 0) {
+        updateMsg(noTaskMsg, infoText);
       }
+      else {
+        updateMsg(taskMsg, infoText, numberTasks);
+      }
+    }
   }
-  console.log(listItem);
   deleteManyDatabase();
 }
 
